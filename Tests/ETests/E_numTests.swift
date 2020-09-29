@@ -1,11 +1,11 @@
 import XCTest
-@testable import E_num
+@testable import E
 
 internal struct E_num {
     var text: Variable = "Hello, World!"
 }
 
-final class E_numTests: XCTestCase {
+final class ETests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct

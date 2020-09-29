@@ -1,4 +1,4 @@
-# E.num
+# E
 
 Swift... but only enums!
 

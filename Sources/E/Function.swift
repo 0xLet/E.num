@@ -1,6 +1,6 @@
 //
 //  Function.swift
-//  E.num
+//  E
 //
 //  Created by Zach Eriksen on 9/29/20.
 //

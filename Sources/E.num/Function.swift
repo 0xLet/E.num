@@ -5,8 +5,6 @@
 //  Created by Zach Eriksen on 9/29/20.
 //
 
-import Foundation
-
 @dynamicCallable
 public enum Function {
     case void(() -> ())
@@ -14,6 +12,7 @@ public enum Function {
     case out(() -> Variable)
     case `inout`((Variable) -> Variable)
     
+    @discardableResult
     func dynamicallyCall(withArguments args: [Variable]) -> Variable? {
         guard args.isEmpty else {
             return run()

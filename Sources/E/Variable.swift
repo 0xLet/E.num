@@ -40,24 +40,25 @@ public extension Variable {
     }
     
     func value<T>(as type: T.Type? = nil) -> T? {
-        if case .bool(let value) = self {
-            return value as? T
-        } else if case .int(let value) = self {
-            return value as? T
-        } else if case .float(let value) = self {
-            return value as? T
-        } else if case .double(let value) = self {
-            return value as? T
-        } else if case .string(let value) = self {
-            return value as? T
-        } else if case .set(let value) = self {
-            return value as? T
-        } else if case .array(let value) = self {
-            return value as? T
-        } else if case .dictionary(let value) = self {
-            return value as? T
-        } else {
+        switch self {
+        case .void:
             return nil
+        case .bool(let value):
+            return value as? T
+        case .int(let value):
+            return value as? T
+        case .float(let value):
+            return value as? T
+        case .double(let value):
+            return value as? T
+        case .string(let value):
+            return value as? T
+        case .set(let value):
+            return value as? T
+        case .array(let value):
+            return value as? T
+        case .dictionary(let value):
+            return value as? T
         }
     }
 }

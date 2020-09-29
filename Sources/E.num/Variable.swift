@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Variable: Equatable, Hashable {
+public enum Variable: Equatable, Hashable {
     case void
     case bool(Bool)
     case int(Int)

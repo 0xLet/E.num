@@ -15,6 +15,10 @@ struct E_num {
     
     var text: Variable = .string("Hello, World!")
     
+    var stu = Function.void {
+        print("STFU")
+    }
+    
     func stupid() {
         if case .string(let value) = text {
             print("Stupid String: \(value)")
@@ -25,5 +29,7 @@ struct E_num {
            case .int(let number) = firstValue {
             print(number * 99)
         }
+        
+        stu()
     }
 }

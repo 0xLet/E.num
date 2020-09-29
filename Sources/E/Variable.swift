@@ -1,6 +1,6 @@
 //
 //  Variable.swift
-//  E.num
+//  E
 //
 //  Created by Zach Eriksen on 9/29/20.
 //
@@ -22,7 +22,7 @@ public extension Variable {
     /// - Returns: A new Variable with the type of T
     func update<T>(_ closure: (T) -> Variable) -> Self {
         guard let value = value(as: T.self) else {
-            print("[E.num] ERROR (\(#function): Could not modify value \(self) as \(T.self)...")
+            print("[E] ERROR (\(#function): Could not modify value \(self) as \(T.self)...")
             return self
         }
         

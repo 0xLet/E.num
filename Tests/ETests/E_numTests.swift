@@ -29,14 +29,51 @@ final class ETests: XCTestCase {
                         count = count.update { value in
                             .int(value + (index.value() ?? 0))
                         }
-                     })
+            })
             .run()
         
         XCTAssertEqual(count, 15)
         XCTAssertEqual(E_num().text, "Hello, World!")
     }
-
+    
+    func testState() {
+        let loggedOut = State.some(with: .some(action: .some(.void({
+            print("Logged Out")
+            XCTAssert(false)
+        }))))
+        
+        let loggedIn = State.some(with:  .some(action: .some(.void({
+            print("Logged In")
+            XCTAssert(true)
+        }))))
+        
+        let attemptLogin = State.some(with: .condition(true: .transition(loggedIn),
+                                                       false: .transition(loggedOut),
+                                                       statement: { () -> Bool in
+                                                        print("Attempting to login without retry...")
+                                                        sleep(3)
+                                                        
+                                                        return true
+        }))
+        
+        let loginFailed = State.transition(to: attemptLogin, with: .some(action: .some(.void({
+            print("Login Failed!")
+        }))))
+        
+        let attemptRetryLogin = State.some(with: .condition(true: .transition(loggedIn),
+                                                            false: .transition(loginFailed),
+                                                            statement: { () -> Bool in
+                                                                print("Attempting to login with retry...")
+                                                                sleep(3)
+                                                                
+                                                                return false
+        }))
+        
+        attemptRetryLogin.run()
+    }
+    
     static var allTests = [
         ("testExample", testExample),
+        ("testState", testState)
     ]
 }

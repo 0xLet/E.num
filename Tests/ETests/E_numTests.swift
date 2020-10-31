@@ -72,8 +72,35 @@ final class ETests: XCTestCase {
         attemptRetryLogin.run()
     }
     
+    func testCyclicState() {
+        var value: Variable = .int(0)
+        let maxValue: Variable = .int(256)
+        let incValue: Function = .void {
+            value = value.update { .int($0 + 1) }
+        }
+        let boolFunc: Function = .out {
+            .bool(value.value() ?? 0 < maxValue.value() ?? 0)
+        }
+        
+        let finState = State.some(with: .some(action: .some(.void({
+            print("DONE!")
+            XCTAssert(true)
+        }))))
+        
+        let cyclicState = State.cyclic(action: .some(incValue), to: finState) {
+            boolFunc()?.value() ?? false
+        }
+        
+        XCTAssertEqual(value.value(), 0)
+
+        cyclicState.run()
+
+        XCTAssertEqual(value.value(), 256)
+    }
+    
     static var allTests = [
         ("testExample", testExample),
-        ("testState", testState)
+        ("testState", testState),
+        ("testCyclicState", testCyclicState)
     ]
 }

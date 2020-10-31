@@ -47,6 +47,7 @@ public extension StateResult {
 }
 
 public indirect enum State {
+    case cyclic(action: StateAction, to: State, while: () -> Bool)
     case some(with: StateResult)
     case transition(to: State, with: StateResult)
 }
@@ -54,6 +55,14 @@ public indirect enum State {
 public extension State {
     func run() {
         switch self {
+        case .cyclic(let action, let to, let statement):
+            guard statement() else {
+                return to.run()
+            }
+            
+            action.act()
+            run()
+            
         case .some(let action):
             action.resolve()
             

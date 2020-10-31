@@ -5,7 +5,7 @@
 //  Created by Zach Eriksen on 9/29/20.
 //
 
-enum Control {
+public enum Control {
     case `if`(Bool, Function)
     case `else`(Bool, Function)
     case ifElse(Bool, Function, Function)
@@ -14,7 +14,7 @@ enum Control {
     case forever(Function)
 }
 
-extension Control {
+public extension Control {
     func run() {
         switch self {
         case .if(let condition, let function):

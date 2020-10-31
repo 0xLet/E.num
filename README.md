@@ -2,6 +2,8 @@
 
 Swift... but only enums!
 
+**[About Swift Enumerations](https://docs.swift.org/swift-book/LanguageGuide/Enumerations.html)**
+
 ## Variables
 
 ### Basic String Example

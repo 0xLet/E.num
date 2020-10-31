@@ -29,14 +29,78 @@ final class ETests: XCTestCase {
                         count = count.update { value in
                             .int(value + (index.value() ?? 0))
                         }
-                     })
+            })
             .run()
         
         XCTAssertEqual(count, 15)
         XCTAssertEqual(E_num().text, "Hello, World!")
     }
+    
+    func testState() {
+        let loggedOut = State.some(with: .some(action: .some(.void({
+            print("Logged Out")
+            XCTAssert(false)
+        }))))
+        
+        let loggedIn = State.some(with:  .some(action: .some(.void({
+            print("Logged In")
+            XCTAssert(true)
+        }))))
+        
+        let attemptLogin = State.some(with: .condition(true: .transition(loggedIn),
+                                                       false: .transition(loggedOut),
+                                                       statement: { () -> Bool in
+                                                        print("Attempting to login without retry...")
+                                                        sleep(3)
+                                                        
+                                                        return true
+        }))
+        
+        let loginFailed = State.transition(to: attemptLogin, with: .some(action: .some(.void({
+            print("Login Failed!")
+        }))))
+        
+        let attemptRetryLogin = State.some(with: .condition(true: .transition(loggedIn),
+                                                            false: .transition(loginFailed),
+                                                            statement: { () -> Bool in
+                                                                print("Attempting to login with retry...")
+                                                                sleep(3)
+                                                                
+                                                                return false
+        }))
+        
+        attemptRetryLogin.run()
+    }
+    
+    func testCyclicState() {
+        var value: Variable = .int(0)
+        let maxValue: Variable = .int(256)
+        let incValue: Function = .void {
+            value = value.update { .int($0 + 1) }
+        }
+        let boolFunc: Function = .out {
+            .bool(value.value() ?? 0 < maxValue.value() ?? 0)
+        }
+        
+        let finState = State.some(with: .some(action: .some(.void({
+            print("DONE!")
+            XCTAssert(true)
+        }))))
+        
+        let cyclicState = State.cyclic(action: .some(incValue), to: finState) {
+            boolFunc()?.value() ?? false
+        }
+        
+        XCTAssertEqual(value.value(), 0)
 
+        cyclicState.run()
+
+        XCTAssertEqual(value.value(), 256)
+    }
+    
     static var allTests = [
         ("testExample", testExample),
+        ("testState", testState),
+        ("testCyclicState", testCyclicState)
     ]
 }

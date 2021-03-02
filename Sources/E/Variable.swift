@@ -21,44 +21,44 @@ public extension Variable {
     init() {
         self = .void
     }
-
+    
     init(bool: Bool) {
         self = .bool(bool)
     }
-
+    
     init(int: Int) {
         self = .int(int)
     }
-
+    
     init(float: Float) {
         self = .float(float)
     }
-
+    
     init(double: Double) {
         self = .double(double)
     }
-
+    
     init(string: String) {
         self = .string(string)
     }
-
+    
     init(set: Set<Variable>) {
         self = .set(set)
     }
-
+    
     init(array: [AnyHashable]) {
         self = .array(array.map({ $0.variable }))
     }
-
+    
     init(dictionary: [AnyHashable: AnyHashable]) {
         let variable = Variable.dictionary([:])
-
+        
         if case .dictionary(var variable) = variable {
             dictionary.forEach { (key, value) in
                 variable[value.variable] = value.variable
             }
         }
-
+        
         self = variable
     }
 }

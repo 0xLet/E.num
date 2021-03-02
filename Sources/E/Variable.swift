@@ -183,7 +183,7 @@ extension Variable: ExpressibleByDictionaryLiteral {
     }
 }
 
-extension AnyHashable {
+public extension AnyHashable {
     var variable: Variable {
         if let variable = self as? Variable {
             return variable

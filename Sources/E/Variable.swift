@@ -64,6 +64,36 @@ public extension Variable {
 }
 
 public extension Variable {
+    var flatten: Variable {
+        guard case .array(let value) = self else {
+            return self
+        }
+        
+        guard !value.isEmpty else {
+            return .array([])
+        }
+        
+        guard value.count > 1 else {
+            return value[0]
+        }
+        
+        let flattenedArray = value.map(\.flatten)
+        
+        var flatArray = [Variable]()
+        
+        for variable in flattenedArray {
+            if case .array(let values) = variable {
+                flatArray.append(contentsOf: values.map(\.flatten))
+            } else {
+                flatArray.append(variable)
+            }
+        }
+        
+        return .array(flatArray)
+    }
+}
+
+public extension Variable {
     /// Update the Variable's Value
     /// - Returns: A new Variable with the type of T
     func update<T>(_ closure: (T) -> Variable) -> Self {

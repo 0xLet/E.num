@@ -21,45 +21,75 @@ public extension Variable {
     init() {
         self = .void
     }
-
+    
     init(bool: Bool) {
         self = .bool(bool)
     }
-
+    
     init(int: Int) {
         self = .int(int)
     }
-
+    
     init(float: Float) {
         self = .float(float)
     }
-
+    
     init(double: Double) {
         self = .double(double)
     }
-
+    
     init(string: String) {
         self = .string(string)
     }
-
+    
     init(set: Set<Variable>) {
         self = .set(set)
     }
-
+    
     init(array: [AnyHashable]) {
         self = .array(array.map({ $0.variable }))
     }
-
+    
     init(dictionary: [AnyHashable: AnyHashable]) {
         let variable = Variable.dictionary([:])
-
+        
         if case .dictionary(var variable) = variable {
             dictionary.forEach { (key, value) in
                 variable[value.variable] = value.variable
             }
         }
-
+        
         self = variable
+    }
+}
+
+public extension Variable {
+    var flatten: Variable {
+        guard case .array(let value) = self else {
+            return self
+        }
+        
+        guard !value.isEmpty else {
+            return .array([])
+        }
+        
+        guard value.count > 1 else {
+            return value[0]
+        }
+        
+        let flattenedArray = value.map(\.flatten)
+        
+        var flatArray = [Variable]()
+        
+        for variable in flattenedArray {
+            if case .array(let values) = variable {
+                flatArray.append(contentsOf: values.map(\.flatten))
+            } else {
+                flatArray.append(variable)
+            }
+        }
+        
+        return .array(flatArray)
     }
 }
 
@@ -153,7 +183,7 @@ extension Variable: ExpressibleByDictionaryLiteral {
     }
 }
 
-extension AnyHashable {
+public extension AnyHashable {
     var variable: Variable {
         if let variable = self as? Variable {
             return variable

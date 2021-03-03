@@ -98,3 +98,7 @@ let double = Function.inout { value in
 // ...
 print("Double of \(Variable.float(3.14)) is \(double(.float(3.14)))")
 ```
+
+## Projects using E.num
+- [⛓ Chain](https://github.com/0xLeif/Chain)
+- [🔭 Observation](https://github.com/0xLeif/Observation)
